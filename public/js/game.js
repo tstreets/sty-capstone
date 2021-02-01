@@ -83,7 +83,7 @@ const gameConfig = {
     width: 900,
     height: 600,
     backgroundColor: '#454545',
-    scene: [CharacterCreationName, CharacterCreationBody],
+    scene: [CharacterCreationBody, CharacterCreationName],
 };
 
 const game = new Phaser.Game(gameConfig);
