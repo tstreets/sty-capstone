@@ -1,12 +1,12 @@
 # Ty Streets' Capstone
 
-# Live Link
+## Live Link
 [https://sty-capstone.herokuapp.com/](https://sty-capstone.herokuapp.com/)
 
-# Project Description
+## Project Description
 This project focuses on the game development of a micro multiplayer game. The website will have attributions for the project, blogs that track the journey of development, and the game. The game is a fantasy action game where players must defend themselves against hordes of zombies. Players battle zombies in a turn based battle system that allows faster creatures to have turns more fequently. While in battle, each creature may only perform one action per turn. 
 
-# Technologies
+## Technologies
 
 Core
 - HTML
