@@ -1,77 +1,59 @@
 import * as GameClasses from '../modules/classes.js';
 
-
 const player = new GameClasses.Player();
 
-const CharacterCreationName = new Phaser.Class({
+const CharacterCreationStats = new Phaser.Class({
     Extends: Phaser.Scene,
-    initialize: function CharacterCreationName() {
-        Phaser.Scene.call(this, {key: 'CharacterCreationName'});
+    initialize: function CharacterCreationStats() {
+        Phaser.Scene.call(this, {key: 'CharacterCreationStats'});
     },
 
     preload: function() {
-        this.load.image('background', '/assets/char-select.png');
+        this.load.image('bg', '/assets/char-create-min.png');
+        for(let char of ['male-1','male-2','female-1','female-2']) {
+            this.load.spritesheet(char, `/assets/${char}.png`, {frameWidth: 96, frameHeight: 128});
+        }
     },
-    create: function() {
-        const background = new GameClasses.Background({
-            spriteKey: 'background'
-        });
-        
+    create:function() {
+        const bg = new GameClasses.Background({ spriteKey: 'bg'});
 
-        background.initialize(this);
+        bg.initialize(this);
+        player.initialize(this);
+        
+        player.setScale(1.25);
     },
     update: function() {},
 })
 
-const CharacterCreationBody = new Phaser.Class({
+const CharacterCreation = new Phaser.Class({
     Extends: Phaser.Scene,
-    initialize: function CharacterCreationBody() {
-        Phaser.Scene.call(this, {key: 'CharacterCreationBody'});
+    initialize: function CharacterCreation() {
+        Phaser.Scene.call(this, {key: 'CharacterCreation'});
     },
 
     preload: function() {
+        this.load.image('bg', '/assets/char-create-min.png');
         this.load.image('arrow', '/assets/direction-arrow.png');
-        this.load.image('screen char create', '/assets/char-create-min.png');
-        const kenneysSpritesheets = ['male 1', 'male 2', 'female 1', 'female 2'];
-        for(let name of kenneysSpritesheets) {
-            this.load.spritesheet(name, `/assets/${name.split(' ').join('-')}.png`, {
-                frameHeight: 128, frameWidth: 96
-            });
+        for(let char of ['male-1','male-2','female-1','female-2']) {
+            this.load.spritesheet(char, `/assets/${char}.png`, {frameWidth: 96, frameHeight: 128});
         }
     },
     create: function() {
-        const background = new GameClasses.Background({
-            boundsConfig: [
-                {x: 95, y: 80, w: 190, h: 160},
-                {x: 545, y: 80, w: 190, h: 160},
-                {x: 35, y: 315, w: 70, h: 300},
-                {x: 605, y: 315, w: 70, h: 300},
-                {x: 95, y: 535, w: 190, h: 130},
-                {x: 545, y: 535, w: 190, h: 130},
-            ],
-            spriteKey: 'screen char create'
-        });
-        const bodies = new GameClasses.CharacterBodies(player);
+        const bg = new GameClasses.Background({ spriteKey: 'bg'});
+        const charBodies = new GameClasses.CharacterBodies();
         const arrows = new GameClasses.SceneArrows([
-            {
-                x: 325, y: 40, 
-                scene: 'CharacterCreationName', 
-                dest: {x: 325, y: 550}
-            }
+            {x: 325, y: 50, scene: 'CharacterCreationStats', dest: {x: 325, y: 300}}, 
         ]);
-        background.initialize(this);
-        player.initialize(this);
-        bodies.initialize(this, player);
 
-        background.setBounds(player);
-        arrows.initialize(this, player);
+        bg.initialize(this);
+        player.initialize(this);
+        charBodies.initialize(this, player);
+        arrows.initialize(this, player)
     },
     update: function() {
         player.moveToDest();
     },
 });
-
-
 
 const gameConfig = {
     type: Phaser.AUTO,
@@ -79,11 +61,11 @@ const gameConfig = {
         default: 'arcade',
         arcade: {debug: true},
     },
+    dom: { createContainer: true },
     parent: 'game',
     width: 900,
     height: 600,
-    backgroundColor: '#454545',
-    scene: [CharacterCreationBody, CharacterCreationName],
+    scene: [CharacterCreation, CharacterCreationStats],
 };
 
-const game = new Phaser.Game(gameConfig);
+const gameRef = new Phaser.Game(gameConfig);

@@ -4,27 +4,27 @@ export class Player {
      * Declare properties used in this class
      */
     constructor() {
-        this.scene = null;
+        this.game = null;
         this.sprite = null;
         this.dest = {x: 325, y: 550};
         this.speed = 150;
-        this.key = null;
+        this.texture = null;
     }
 
     /**
-     * Initialize an instance in the current scene
-     * @param {Phaser.Scene} scene Reference to current scene
+     * Initialize an instance in the current game
+     * @param {Phaser.Game} game Reference to current game
      */
-    initialize(scene) {
-        this.scene = scene;
-        if(this.scene) this.createSprite();
+    initialize(game) {
+        this.game = game;
+        if(this.game) this.createSprite();
     }
 
     /**
-     * Create a sprite for this object in the current scene
+     * Create a sprite for this object in the current game
      */
     createSprite() {
-        this.sprite = this.scene.physics.add.sprite(this.dest.x, this.dest.y, 'none 1');
+        this.sprite = this.game.physics.add.sprite(this.dest.x, this.dest.y, this.texture || 'none-1');
         this.sprite.body.syncBounds = true;
         this.clickToMove();
     }
@@ -53,8 +53,16 @@ export class Player {
      * Set the destination by mouse clicking onto the game
      */
     clickToMove() {
-        this.scene.input.on('pointerdown', pointer=> {
+        this.game.input.on('pointerdown', pointer=> {
             this.dest = {x: pointer.x, y: pointer.y};
         });
+    }
+
+    /**
+     * Set the scale for the player
+     * @param {number} scale Number for player to be scaled by
+     */
+    setScale(scale) {
+        this.sprite.setScale(scale);
     }
 };

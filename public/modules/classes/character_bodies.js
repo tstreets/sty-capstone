@@ -6,22 +6,22 @@ export class CharacterBodies {
             {
                 sprite: null,
                 dest: {x: 125, y: 225},
-                key: 'male 1'
+                key: 'male-1'
             },
             {
                 sprite: null,
                 dest: {x: 525, y: 225},
-                key: 'male 2'
+                key: 'male-2'
             },
             {
                 sprite: null,
                 dest: {x: 125, y: 400},
-                key: 'female 1'
+                key: 'female-1'
             },
             {
                 sprite: null,
                 dest: {x: 525, y: 400},
-                key: 'female 2'
+                key: 'female-2'
             },
         ];
         this.playerRef = null;

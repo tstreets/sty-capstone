@@ -2,36 +2,38 @@ export class SceneArrows {
 
     /**
      * 
-     * @param {[{x: number, y: number, scene: string}]} arrows 
+     * @param {{x: number, y: number, scene: string, dest: {x: number, y: number}}[]} arrows 
      */
     constructor(arrows) {
         this.arrows = arrows;
-        this.scene = null;
+        this.game = null;
         this.player = null;
     }
     
     /**
-     * Set the scene and player reference
-     * @param {Phaser.Scene} scene 
+     * Set the game and player reference
+     * @param {Phaser.Game} game 
      * @param {Player} player 
      */
-    initialize(scene, player) {
-        this.scene = scene;
+    initialize(game, player) {
+        this.game = game;
         this.player = player;
-        if(this.scene && this.player) {
+        if(this.game && this.player) {
             this.setSprite();
         }
         else {
-            console.warn('Scene not set');
+            console.warn('game not set');
         }
     }
 
     /**
-     * Create an sprite instance in current scene
+     * Create an sprite instance in current game
      */
     setSprite() {
         for(let arrow of this.arrows) {
-            arrow.sprite = this.scene.physics.add.staticSprite(arrow.x, arrow.y,'arrow');
+            arrow.sprite = this.game.add.sprite(arrow.x, arrow.y,'arrow');
+            arrow.bounds = this.game.physics.add.staticSprite(arrow.x, arrow.y);
+            arrow.bounds.setSize(300, 50);
             this.setCollision(arrow);
         }
     }
@@ -41,28 +43,28 @@ export class SceneArrows {
      * @param {any} arrow 
      */
     setCollision(arrow) {
-        this.scene.physics.add.collider(
+        this.game.physics.add.collider(
             this.player.sprite,
-            arrow.sprite,
+            arrow.bounds,
             null,
             (p,a)=> {
-                this.loadNextScene(p, arrow);
+                this.loadNextgame(p, arrow);
             },
-            this.scene
+            this.game
         );
     }
     
     /**
-     * Loads the next scene if player is ready
+     * Loads the next game if player is ready
      * @param {Player} p 
      * @param {any} arrow 
      */
-    loadNextScene(p, arrow) {
+    loadNextgame(p, arrow) {
         p.body.stop();
         this.player.dest = null;
         if(this.player.texture) {
             this.player.dest = arrow.dest;
-            this.scene.scene.start(arrow.scene);
+            this.game.scene.start(arrow.scene);
         }
         else {
             alert('Go Back');

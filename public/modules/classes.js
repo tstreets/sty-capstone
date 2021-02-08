@@ -7,7 +7,7 @@ export {
     Background, 
     Player,
     CharacterBodies,
-    SceneArrows
+    SceneArrows,
 };
 
 
