@@ -9,6 +9,7 @@ export class Player {
         this.dest = {x: 325, y: 550};
         this.speed = 150;
         this.texture = null;
+        this.name = '';
     }
 
     /**
@@ -24,7 +25,11 @@ export class Player {
      * Create a sprite for this object in the current game
      */
     createSprite() {
-        this.sprite = this.game.physics.add.sprite(this.dest.x, this.dest.y, this.texture || 'none-1');
+        let randTexture = (Math.random() > .5) ? 'male' : 'female';
+        randTexture += '-' + `${(Math.random() > .5) ? '1' : '2'}`;
+        this.sprite = this.game.physics.add.sprite(this.dest.x, this.dest.y, this.texture || randTexture);
+        this.setScale(.75);
+        this.texture = this.texture || randTexture;
         this.sprite.body.syncBounds = true;
         this.clickToMove();
     }
@@ -64,5 +69,13 @@ export class Player {
      */
     setScale(scale) {
         this.sprite.setScale(scale);
+    }
+
+    /**
+     * Set the name for the player
+     * @param {string} name Name for the player 
+     */
+    setName(name) {
+        this.name = name || this.name;
     }
 };

@@ -54,13 +54,13 @@ export class CharacterBodies {
 
     changeTexture(p, b) {
         if(p.texture.key != b.texture.key) {
-            p.setTexture(b.texture.key);
-            p.setScale(.75);
-            this.playerRef.texture = b.texture.key;
             this.playerRef.dest = null;
             p.body.stop();
             p.x = 325;
             p.y = 320;
+            p.setTexture(b.texture.key);
+            p.setScale(.75);
+            this.playerRef.texture = b.texture.key;
         }
     }
 }
