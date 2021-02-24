@@ -1,81 +1,94 @@
 /**
- * Required Dependencies
+ * Require dependencies
  */
 const http = require('http');
 const path = require('path');
 const express = require('express');
-const engine = require('consolidate');
+const admin = require('firebase-admin');
+const serviceAccount = require('./p_data/firebase-admin-sdk.json');
+const socket_io = require('socket.io');
+const e = require('express');
 
 /**
- * Setup express app
+ * Config express app handling
  */
 const app = express();
-app.engine('pug', engine.pug);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 app.use( express.static( path.join(__dirname, 'public') ) );
 
 /**
- * Port number that server runs on
+ * Port number server runs on
  */
 const port = process.env.PORT || 3000;
 
 /**
- * Web server for app
+ * Server for web application
  */
 const server = http.createServer(app);
 server.listen(port);
-console.log(`App running on port ${port}`);
 
 /**
- * App handler for quick routes
+ * Iniatialize web sockets for server
  */
-const routes = [
-    {
-        req: '/',
-        path: 'index',
-        data: {
-            title: ''
+const io = socket_io(server);
+io.on('connection', socket=> {
+    // console.log(`${socket.id} has joined`);
+
+    socket.onAny((event, info)=> {
+        info.socket = socket;
+        if(event == 'login user') {
+            fb.loginUser(info);
         }
-    },
-    {
-        req: '/about',
-        path: 'about',
-        data: {
-            title: '- About'
-        }
-    },
-    {
-        req: '/blogs',
-        path: 'blogs',
-        data: {
-            title: '- Blogs'
-        }
-    },
-    {
-        req: '/contact',
-        path: 'contact',
-        data: {
-            title: '- Contact'
-        }
-    },
-    {
-        req: '/game',
-        path: 'game',
-        data: {
-            title: '- Game'
-        }
-    },
-    {
-        req: '/login',
-        path: 'login',
-        data: {
-            title: '- Login'
-        }
-    },
-];
-routes.forEach(route=> {
-    app.get(route.req, function(req,res,next) {
-        res.render(route.path, route.data);
     });
+
+    socket.on('disconnect', ()=> {
+        // console.log(`${socket.id} has left`);
+    });
+})
+
+/**
+ * Initialize firebase admin
+ */
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: 'https://sty-capstone.firebaseio.com',
+    storageBucket: 'sty-capstone.appspot.com'
 });
+
+const firestore = admin.firestore();
+const storage = admin.storage();
+
+const fb = {
+    loginUser(userInfo) {
+        firestore
+        .collection('Users')
+        .where('username', '==', userInfo.username)
+        .get()
+        .then(snap=> {
+            if(snap.empty) {
+                userInfo.socket.emit('login', {
+                    status: false
+                });
+            }
+            else {
+                snap.docs.forEach((userDoc, index)=> {
+                    if(userDoc.data().password == userInfo.password) {
+                        userInfo.socket.emit('login', {
+                            status: true,
+                            user: {
+                                username: userInfo.username,
+                                save_username:  userInfo.save_username
+                            }
+                        });
+                    }
+                    else if(index == snap.size - 1) {
+                        userInfo.socket.emit('login', {
+                            status: false
+                        });
+                    }
+                })
+            }
+        })
+    }
+};
+
+console.log(`App is running on port ${port}`);
