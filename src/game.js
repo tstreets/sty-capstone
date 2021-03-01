@@ -1,6 +1,6 @@
-import * as Phaser from 'phaser';
 import { Scenes } from './scene.js';
 import * as GameClass from './class.js';
+const Phaser = require('phaser');
 
 globalThis.player = new GameClass.Player();
 

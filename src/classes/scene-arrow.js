@@ -48,7 +48,7 @@ export class SceneArrows {
             arrow.bounds,
             null,
             (p,a)=> {
-                this.loadNextgame(p, arrow);
+                this.loadNextScene(p, arrow);
             },
             this.game
         );
@@ -59,10 +59,10 @@ export class SceneArrows {
      * @param {Player} p 
      * @param {any} arrow 
      */
-    loadNextgame(p, arrow) {
+    loadNextScene(p, arrow) {
         p.body.stop();
         this.player.dest = null;
-        if(this.player.texture) {
+        if(this.player.texture != 'none') {
             this.player.dest = arrow.dest;
             this.game.scene.start(arrow.scene);
         }

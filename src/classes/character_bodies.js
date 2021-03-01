@@ -36,7 +36,6 @@ export class CharacterBodies {
     setSprites() {
         this.sprites.forEach(s=> {
             s.sprite = this.scene.physics.add.sprite(s.dest.x, s.dest.y, s.key);
-            s.sprite.setScale(.75);
             s.sprite.body.syncBounds = true;
             this.collisionCheck(s);
         });
@@ -59,7 +58,6 @@ export class CharacterBodies {
             p.x = 325;
             p.y = 320;
             p.setTexture(b.texture.key);
-            p.setScale(.75);
             this.playerRef.texture = b.texture.key;
         }
     }

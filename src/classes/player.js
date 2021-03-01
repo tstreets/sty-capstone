@@ -25,11 +25,10 @@ export class Player {
      * Create a sprite for this object in the current game
      */
     createSprite() {
-        let randTexture = (Math.random() > .5) ? 'male' : 'female';
-        randTexture += '-' + `${(Math.random() > .5) ? '1' : '2'}`;
+        let randTexture = 'none';
         this.sprite = this.game.physics.add.sprite(this.dest.x, this.dest.y, this.texture || randTexture);
-        this.setScale(.75);
         this.texture = this.texture || randTexture;
+        this.setScale(1);
         this.sprite.body.syncBounds = true;
         this.clickToMove();
     }
