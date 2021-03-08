@@ -3,6 +3,7 @@ import { Signup } from './scenes/signup.js';
 import { CreationBody } from './scenes/creation-body.js';
 import { CreationStats } from './scenes/creation-stats.js';
 import { CharacterSelection } from './scenes/character-selection.js';
+import { MainGame } from "./scenes/main-game.js";
 
 export const Scenes = [
     Login,
@@ -10,4 +11,5 @@ export const Scenes = [
     CreationBody,
     CreationStats,
     CharacterSelection,
+    MainGame
 ];

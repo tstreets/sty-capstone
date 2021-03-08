@@ -10,6 +10,7 @@ export class Player {
         this.speed = 150;
         this.texture = null;
         this.name = '';
+        this.currentSlot = 0;
     }
 
     /**
@@ -25,6 +26,9 @@ export class Player {
      * Create a sprite for this object in the current game
      */
     createSprite() {
+        if(this.dest == null) {
+            this.dest = {x: 325, y: 550};
+        }
         let randTexture = 'none';
         this.sprite = this.game.physics.add.sprite(this.dest.x, this.dest.y, this.texture || randTexture);
         this.texture = this.texture || randTexture;
@@ -76,5 +80,12 @@ export class Player {
      */
     setName(name) {
         this.name = name || this.name;
+    }
+
+    updateSprite() {
+        const texture = this.data.slots[this.currentSlot].texture;
+        const name = this.data.slots[this.currentSlot].name;
+        this.sprite.destroy();
+        this.sprite = this.game.physics.add.sprite(this.dest.x, this.dest.y, texture);
     }
 };

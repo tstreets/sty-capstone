@@ -15,15 +15,10 @@ export const CreationBody = new Phaser.Class({
     },
 
     preload: function() {
-        this.load.image('bg','/assets/char-create.png');
-        this.load.image('none', '/assets/none.png');
-        this.load.image('arrow', '/assets/direction-arrow.png');
-        for(let char of ['male-1','male-2','female-1','female-2']) {
-            this.load.spritesheet(char, `/assets/${char}.png`, {frameWidth: 96, frameHeight: 128});
-        }
+        this.load.image('bg create body','/assets/char-select.png');
     },
     create: function() {
-        const bg = new GameClass.Background({ spriteKey: 'bg'});
+        const bg = new GameClass.Background({ spriteKey: 'bg create body'});
         const charBodies = new GameClass.CharacterBodies();
         const arrows = new GameClass.SceneArrows([
             {x: 325, y: 50, scene: 'CreationStats', dest: {x: 525, y: 300}}, 

@@ -34,7 +34,8 @@ const info = {
             },
         };
         if(playerInfo.name && Object.values(playerInfo.stats).every(v=> !!v)) {
-            gameData.player.slots[0] = playerInfo;
+            player.data.slots[player.currentSlot] = playerInfo;
+            socket.emit('update user', player.data);
             this.game.scene.start('MainGame');
         }
         else {
@@ -52,12 +53,6 @@ const info = {
 
 const socket = io();
 
-const gameData = {
-    player: {
-        slots: []
-    }
-}
-
 socket.onAny((event, info)=> {
 
 });
@@ -70,14 +65,10 @@ export const CreationStats = new Phaser.Class({
 
     preload: function() {
         this.load.html('info', '/html/create-character.html');
-        this.load.image('none', '/assets/none.png');
-        this.load.image('bg', '/assets/char-create-min.png');
-        for(let char of ['male-1','male-2','female-1','female-2']) {
-            this.load.spritesheet(char, `/assets/${char}.png`, {frameWidth: 96, frameHeight: 128});
-        }
+        this.load.image('bg create stats', '/assets/char-select.png');
     },
     create:function() {
-        const bg = new GameClass.Background({ spriteKey: 'bg'});
+        const bg = new GameClass.Background({ spriteKey: 'bg create stats'});
         
         bg.initialize(this);
         player.initialize(this);

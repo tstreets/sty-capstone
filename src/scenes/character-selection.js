@@ -17,14 +17,20 @@ const characters = {
     initialize(game, player) {
         this.game = game;
         this.player = player;
+        this.setSlots();
+    },
+    setSlots() {
+        this.slots = this.player.data.slots;
+        console.log(this.slots);
         this.createSprites();
     },
     createSprites() {
         this.slots.forEach((slot, index)=> {
             slot.sprite = this.game.physics.add.sprite(index * 240 + 160,100, slot.texture);
-            slot.nameSprite = this.game.add.dom(slot.sprite.x, slot.sprite.y - 20).createFromHTML(`
-            <h1>${slot.name}</h1>
+            slot.nameSprite = this.game.add.dom(slot.sprite.x, slot.sprite.y - 40).createFromHTML(`
+            <h1 style='font-size: 16px;'>${slot.name}</h1>
             `);
+            slot.index = index;
             this.setCollision(slot);
         });
     },
@@ -34,14 +40,20 @@ const characters = {
             slot.sprite,
             null,
             (p,a)=> {
-                this.loadNextScene();
+                this.player.currentSlot = slot.index;
+                this.loadNextScene(slot);
             },
             this.game
         );
     },
-    loadNextScene() {
+    loadNextScene(slot) {
         this.player.dest = {x: 300, y: 400};
-        this.game.scene.start('CreationBody');
+        if(slot.name == "None") {
+            this.game.scene.start('CreationBody');
+        }
+        else {
+            this.game.scene.start('MainGame');
+        }
     },
 };
 
@@ -52,15 +64,11 @@ export const CharacterSelection = Phaser.Class({
     },
 
     preload: function() {
-        this.load.image('bg','/assets/char-select.png');
-        this.load.image('none', '/assets/none.png');
-        this.load.image('arrow', '/assets/direction-arrow.png');
-        for(let char of ['male-1','male-2','female-1','female-2']) {
-            this.load.spritesheet(char, `/assets/${char}.png`, {frameWidth: 96, frameHeight: 128});
-        }
+        this.load.image('bg char select','/assets/char-select.png');
+        console.log(player.data);
     },
     create: function() {
-        const background = new GameClass.Background({spriteKey: 'bg'});
+        const background = new GameClass.Background({spriteKey: 'bg char select'});
     
         background.initialize(this);
         player.initialize(this);

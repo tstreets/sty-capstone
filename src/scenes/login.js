@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import { io } from 'socket.io-client';
+import * as GameClass from '../class.js';
 
 const login = {
     initialize(game) {
@@ -47,9 +48,12 @@ const socket = io();
 socket.onAny((event, info)=> {
     if(event == 'login') {
         if(info.status) {
+            player.data = {
+                username: info.user.username,
+                slots: info.slots,
+            };
             login.nextScene('CharacterSelection');
         }
-        console.log(info.status);
     }
 });
 
@@ -60,10 +64,21 @@ export const Login = new Phaser.Class({
     },
 
     preload: function() {
-        this.load.html('login','/html/login.html')
+        this.load.image('bg login', '/assets/char-select.png');
+        this.load.image('none', '/assets/none.png');
+        this.load.image('arrow', '/assets/direction-arrow.png');
+        for(let char of ['male-1','male-2','female-1','female-2']) {
+            this.load.spritesheet(char, `/assets/${char}.png`, {frameWidth: 96, frameHeight: 128});
+        }
+
+        this.load.html('login','/html/login.html');
+        this.load.html('menu', '/html/menu.html');
     },
     create: function() {
+        const background = new GameClass.Background({spriteKey: 'bg login'});
+
         login.initialize(this);
+        background.initialize(this);
     },
     update: function() {},
 });

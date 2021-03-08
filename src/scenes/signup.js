@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import { io } from 'socket.io-client';
+import * as GameClass from '../class.js';
 
 const signup = {
     initialize(game) {
@@ -68,10 +69,13 @@ export const Signup = new Phaser.Class({
     },
 
     preload: function() {
-        this.load.html('signup','/html/signup.html')
+        this.load.html('signup','/html/signup.html');
     },
     create: function() {
+        const bg = new GameClass.Background({spriteKey: 'bg login'});
+
         signup.initialize(this);
+        bg.initialize(this);
     },
     update: function() {},
 });
